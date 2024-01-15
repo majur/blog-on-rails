@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logout(user)
-    Current.user = user
+    Current.user = nil
     reset_session
   end
 end
