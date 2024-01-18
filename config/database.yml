@@ -22,4 +22,6 @@ test:
 
 production:
   <<: *default
-  database: storage/production.sqlite3
+  database: blog_on_rails_production
+  username: blog_on_rails
+  password: <%= ENV["BLOG_ON_RAILS_DATABASE_PASSWORD"] %>
