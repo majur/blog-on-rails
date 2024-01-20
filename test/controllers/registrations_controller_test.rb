@@ -21,7 +21,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to root_path
-    assert_equal 'User successfully created', flash[:notice]
+    assert_equal 'Registration successful. Check your email.', flash[:notice]
   end
 
   test 'should not create user with invalid params' do

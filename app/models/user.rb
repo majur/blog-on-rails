@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
-  validates :email, presence: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
   normalizes :email, with: ->(email) {email.strip.downcase}
 
   generates_token_for :password_reset, expires_in: 15.minutes do

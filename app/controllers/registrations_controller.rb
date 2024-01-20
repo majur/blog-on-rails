@@ -7,8 +7,11 @@ class RegistrationsController < ApplicationController
     @user = User.new(registration_params)
     if @user.save
       login @user
-      redirect_to root_path, notice: 'User successfully created'
+      redirect_to root_path, notice: 'Registration successful. Check your email.'
     else
+      if @user.errors[:email].include?("has already been taken")
+        flash.now[:alert] = 'Email has already been taken. If this is your account, please log in.'
+      end
       render :new, status: :unprocessable_entity
     end
   end
