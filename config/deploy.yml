@@ -6,13 +6,13 @@ image: majur/blog_on_rails
 
 # Deploy to these servers.
 servers:
-  - 65.108.81.136
+  - 
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: my-user
+  username:
 
   # Always use an access token rather than real password when possible.
   password:
@@ -22,7 +22,7 @@ registry:
 # Remember to run `kamal env push` after making changes!
 env:
   clear:
-    DB_HOST: 192.168.0.2
+    DB_HOST: 
   secret:
     - RAILS_MASTER_KEY
     - MYSQL_ROOT_PASSWORD
@@ -45,7 +45,7 @@ env:
 accessories:
   db:
     image: mysql:8.0
-    host: 135.181.196.112
+    host: 
     port: 3306
     env:
       clear:
