@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resource :session
   resource :password_reset
   resource :password
+  resource :user_settings
+  resources :users
 
   root "main#index"
 end

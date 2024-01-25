@@ -5,6 +5,8 @@ class RegistrationsController < ApplicationController
 
   def create
     @user = User.new(registration_params)
+    @user.superadmin = User.count.zero?
+    
     if @user.save
       login @user
       redirect_to root_path, notice: 'Registration successful. Check your email.'
@@ -18,6 +20,6 @@ class RegistrationsController < ApplicationController
   private
 
   def registration_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
+      params.require(:user).permit(:email, :password, :password_confirmation, :superadmin)
   end
 end
