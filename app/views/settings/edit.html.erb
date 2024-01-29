@@ -1,0 +1,10 @@
+<%= form_with model: @setting, url: setting_path(@setting), method: :patch do |form| %>
+  <div class="field">
+    <%= form.label :registration_enabled, 'Registration enabled' %>
+    <%= form.check_box :value %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Save settings' %>
+  </div>
+<% end %>

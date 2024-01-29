@@ -17,12 +17,15 @@
       <%= link_to "Edit Name", edit_user_settings_path %>
       <%= link_to "Edit Password", edit_password_path %>
       <% if current_user.superadmin? %>
+        <%= link_to "Blog Settings", edit_setting_path %>
         <%= link_to "Users", users_path %>
       <% else %>
       <% end %>
       <%= button_to "Log out", session_path, method: :delete %>
     <% else %>
-      <%= link_to "Sign Up", new_registration_path %>
+      <% if Setting.find_by(key: 'registration_enabled')&.value == '1' %>
+        <%= link_to "Sign Up", new_registration_path %>
+      <% end %>
       <%= link_to "Log in", new_session_path %>
     <% end %>
 
