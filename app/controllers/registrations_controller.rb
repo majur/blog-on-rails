@@ -1,6 +1,6 @@
 class RegistrationsController < ApplicationController
   before_action :check_registration_enabled, only: [:new]
-  
+
   def new
     @user = User.new
   end
@@ -34,7 +34,7 @@ class RegistrationsController < ApplicationController
 
   def check_registration_enabled
     setting = Setting.find_by(key: 'registration_enabled')
-    if setting.nil? || setting.value == '0'
+    if setting&.value == '0'
       redirect_to root_path, alert: 'User registration is not currently enabled.'
     end
   end

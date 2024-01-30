@@ -23,7 +23,7 @@
       <% end %>
       <%= button_to "Log out", session_path, method: :delete %>
     <% else %>
-      <% if Setting.find_by(key: 'registration_enabled')&.value == '1' %>
+      <% if Setting.find_by(key: 'registration_enabled')&.value == '1' || !Setting.exists?(key: 'registration_enabled') %>
         <%= link_to "Sign Up", new_registration_path %>
       <% end %>
       <%= link_to "Log in", new_session_path %>

@@ -1,4 +1,7 @@
 class SettingsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :authorize_superadmin, only: [:edit, :update]
+
   def edit
     @setting = Setting.find_by(key: 'registration_enabled')
   end
@@ -16,5 +19,11 @@ class SettingsController < ApplicationController
 
   def setting_params
     params.require(:setting).permit(:value)
+  end
+
+  def authorize_superadmin
+    unless current_user && current_user.superadmin?
+      redirect_to root_path, alert: 'You are not authorized to access this page.'
+    end
   end
 end
