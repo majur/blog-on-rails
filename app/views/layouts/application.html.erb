@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
   </head>
 
   <body>
@@ -14,6 +15,7 @@
     <div><%= alert %></div>
 
     <% if user_signed_in? %>
+      <%= link_to "Posts", posts_path %>
       <%= link_to "Edit Name", edit_user_settings_path %>
       <%= link_to "Edit Password", edit_password_path %>
       <% if current_user.superadmin? %>

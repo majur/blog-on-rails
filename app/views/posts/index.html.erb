@@ -1,0 +1,12 @@
+<h1>Posts</h1>
+
+<% @posts.each do |post| %>
+  <div>
+    <p>
+      - <%= link_to post.title, post %>
+      | <span class="timestamp"><%= post.created_at.strftime("%B %d, %Y %H:%M") %></span>
+    </p>
+  </div>
+<% end %>
+
+<%= link_to 'New Post', new_post_path %>
