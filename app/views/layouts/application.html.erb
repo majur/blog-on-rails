@@ -13,9 +13,12 @@
   <body>
     <div><%= notice %></div>
     <div><%= alert %></div>
-
+    <header style="padding-top: 25px;">
     <% if user_signed_in? %>
-      <%= link_to "Posts", posts_path %>
+      <% if current_user.author? %>
+        <%= link_to "Posts", posts_path %>
+      <% else %>
+      <% end %>
       <%= link_to "Edit Name", edit_user_settings_path %>
       <%= link_to "Edit Password", edit_password_path %>
       <% if current_user.superadmin? %>
@@ -30,7 +33,7 @@
       <% end %>
       <%= link_to "Log in", new_session_path %>
     <% end %>
-
+    </header>
     <%= yield %>
   </body>
 </html>
