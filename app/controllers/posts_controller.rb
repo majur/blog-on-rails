@@ -18,6 +18,7 @@ class PostsController < ApplicationController
       if @post.save
         redirect_to @post, notice: 'Post was successfully created.'
       else
+        flash[:alert] = "Title can't be blank."
         render :new
       end
     end
