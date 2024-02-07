@@ -11,6 +11,11 @@
   </div>
 
   <div>
+    <%= form.label :published, "Published" %>
+    <%= form.check_box :published %>
+  </div>
+
+  <div>
     <%= form.submit "Save post" %>
   </div>
 <% end %>

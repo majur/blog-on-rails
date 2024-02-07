@@ -6,6 +6,7 @@
       <th>Title</th>
       <th>Content</th>
       <th>Author</th>
+      <th>Published</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -15,10 +16,13 @@
         <td><%= post.title %></td>
         <td><%= post.content %></td>
         <td><%= post.user.name %></td>
+        <td><%= post.published ? 'Yes' : 'No' %></td>
         <td>
           <%= link_to 'Show', post %>
-          <%= link_to 'Edit', edit_post_path(post) %>
-          <%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <% if current_user.superadmin? || post.user == current_user %>
+            <%= link_to 'Edit', edit_post_path(post) %>
+            <%= link_to 'Delete', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <% end %>
         </td>
       </tr>
     <% end %>

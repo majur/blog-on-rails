@@ -1,13 +1,22 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author, only: [:edit, :update, :index, :show, :new, :create]
+  before_action :authorize_author, only: [:edit, :update, :new, :create, :index]
 
   def index
-    @posts = Post.all
+    if current_user.superadmin?
+      @posts = Post.all
+    else
+      @posts = current_user.posts
+    end
   end
 
   def show
+    @post = Post.find(params[:id])
+    if @post.published || (user_signed_in? && current_user == @post.user)
+    else
+      redirect_to root_path, alert: "This post is not available."
+    end
   end
 
   def new
@@ -26,6 +35,10 @@ class PostsController < ApplicationController
   end
 
   def edit
+    @post = Post.find(params[:id])
+    unless current_user.superadmin? || (current_user.author? && @post.user == current_user)
+      redirect_to root_path, alert: 'You are not authorized to edit this post.'
+    end
   end
 
   def update
@@ -48,11 +61,11 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :content, :user_id)
+    params.require(:post).permit(:title, :content, :user_id, :published)
   end
 
   def authorize_author
-    unless current_user && current_user.author?
+    unless current_user && (current_user.superadmin? || current_user.author?)
       redirect_to root_path, alert: 'You are not authorized to access this page.'
     end
   end

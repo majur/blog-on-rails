@@ -7,4 +7,5 @@
 <div>
   <%= @post.content %>
 </div>
-
+<hr class="solid">
+<p><em>Published by <%= @post.user.name %> on <%= @post.created_at.strftime('%B %d, %Y') %></em></p>

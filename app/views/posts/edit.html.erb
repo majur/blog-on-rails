@@ -1,9 +1,9 @@
-<% if logged_in? %>
-<h1>Editing Post</h1>
-<%= render 'form', post: @post %>
+<% if user_signed_in? %>
+  <h1>Editing Post</h1>
+  <%= render 'form', post: @post %>
 
-<%= link_to 'Show', @post %> |
-<%= link_to 'Back', posts_path %>
+  <%= link_to 'Show', @post %> |
+  <%= link_to 'Back', posts_path %>
 <% else %>
-<%= render 'Show' %>
+  <%= render 'Show' %>
 <% end %>
