@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :posts
   has_secure_password
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   normalizes :email, with: ->(email) {email.strip.downcase}
@@ -10,4 +11,6 @@ class User < ApplicationRecord
   generates_token_for :email_confirmation, expires_in: 24.hours do
     email
   end
+
+  attribute :author, :boolean, default: false
 end

@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<h1>
+  <%= @post.title %>
+</h1>
+
+<div>
+  <%= @post.content %>
+</div>
+<hr class="solid">
+<p><em>Published by <%= @post.user.name %> on <%= @post.created_at.strftime('%B %d, %Y') %></em></p>

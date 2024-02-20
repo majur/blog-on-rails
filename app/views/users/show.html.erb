@@ -10,6 +10,16 @@
   <%= @user.email %>
 </p>
 
+<p>
+  <strong>Author:</strong>
+  <%= @user.author %>
+</p>
+
+<p>
+  <strong>Admin:</strong>
+  <%= @user.superadmin %>
+</p>
+
 <% if current_user.superadmin? || @user = current_user %>
   <%= link_to 'Edit', edit_user_path(@user) %> |
 <% end %>

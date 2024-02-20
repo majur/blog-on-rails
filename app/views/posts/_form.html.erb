@@ -1,0 +1,21 @@
+<%= form_with(model: @post, local: true) do |form| %>
+
+  <div>
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.rich_text_area :content, id: "post_content" %>
+  </div>
+
+  <div>
+    <%= form.label :published, "Published" %>
+    <%= form.check_box :published %>
+  </div>
+
+  <div>
+    <%= form.submit "Save post" %>
+  </div>
+<% end %>

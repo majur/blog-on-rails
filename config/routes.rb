@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resource :user_settings
   resource :setting
   resources :users
+  resources :posts
 
   root "main#index"
 end
