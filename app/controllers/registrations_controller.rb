@@ -1,5 +1,5 @@
 class RegistrationsController < ApplicationController
-  before_action :check_registration_enabled, only: [:new]
+  before_action :check_registration_enabled, only: [:new, :create]
 
   def new
     @user = User.new
@@ -10,9 +10,7 @@ class RegistrationsController < ApplicationController
     @user.superadmin = User.count.zero?
 
     if @user.save
-      # Create settings record when the first user is created
-      create_registration_setting unless Setting.exists?(key: 'registration_enabled')
-
+      create_registration_setting unless Setting.exists?(registration_enabled: true)
       login @user
       redirect_to root_path, notice: 'Registration successful. Check your email.'
     else
@@ -22,20 +20,18 @@ class RegistrationsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
   private
 
   def registration_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :superadmin)
+    params.require(:user).permit(:email, :password, :password_confirmation, :superadmin)
   end
 
   def create_registration_setting
-    Setting.create(key: 'registration_enabled', value: '1')
+    Setting.create(blog_name: 'Shiny New Blog', registration_enabled: true)
   end
 
   def check_registration_enabled
-    setting = Setting.find_by(key: 'registration_enabled')
-    if setting&.value == '0'
-      redirect_to root_path, alert: 'User registration is not currently enabled.'
-    end
+    redirect_to root_path, alert: 'User registration is not currently enabled.' unless Setting.exists?(registration_enabled: true) || User.count.zero?
   end
 end

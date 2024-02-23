@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Blog On Rails</title>
+    <% if Setting.exists? %>
+      <title><%= @settings.blog_name %></title>
+    <% else %>
+      <title>New blog</title>
+    <% end %>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -15,7 +19,11 @@
     <div><%= notice %></div>
     <div><%= alert %></div>
     <header style="padding-top: 25px;">
-    <h1>Blog on Rails</h1>
+    <% if Setting.exists? %>
+      <h1><%= @settings.blog_name %></h1>
+    <% else %>
+      <h1>New blog</h1>
+    <% end %>
     </header>
     <%= yield %>
     <footer>
@@ -34,7 +42,7 @@
         <% end %>
         <%= button_to "Log out", session_path, method: :delete %>
       <% else %>
-        <% if Setting.find_by(key: 'registration_enabled')&.value == '1' || !Setting.exists?(key: 'registration_enabled') %>
+        <% if Setting.exists?(registration_enabled: true) || !Setting.exists?(registration_enabled: [true, false]) %>
           <%= link_to "Sign Up", new_registration_path %>
         <% end %>
         <%= link_to "Log in", new_session_path %>
