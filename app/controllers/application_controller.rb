@@ -1,5 +1,11 @@
 class ApplicationController < ActionController::Base
+  before_action :set_settings
+
   private
+
+  def set_settings
+    @settings = Setting.first_or_initialize
+  end
 
   def authenticate_user!
     unless user_signed_in? || (controller_name == 'posts' && action_name == 'show')

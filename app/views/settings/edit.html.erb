@@ -1,7 +1,12 @@
-<%= form_with model: @setting, url: setting_path(@setting), method: :patch do |form| %>
+<%= form_for @settings, url: setting_path, method: :patch do |form| %>
   <div class="field">
     <%= form.label :registration_enabled, 'Registration enabled' %>
-    <%= form.check_box :value %>
+    <%= form.check_box :registration_enabled %>
+  </div>
+
+  <div class="field">
+    <%= form.label :blog_name, 'Blog Name' %>
+    <%= form.text_field :blog_name %>
   </div>
 
   <div class="actions">

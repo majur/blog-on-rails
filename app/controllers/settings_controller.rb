@@ -3,13 +3,12 @@ class SettingsController < ApplicationController
   before_action :authorize_superadmin, only: [:edit, :update]
 
   def edit
-    @setting = Setting.find_by(key: 'registration_enabled')
   end
 
+
   def update
-    @setting = Setting.find_by(key: 'registration_enabled')
-    if @setting.update(setting_params)
-      redirect_to edit_setting_path(@setting), notice: 'The settings have been updated.'
+    if @settings.update(setting_params)
+      redirect_to edit_setting_path, notice: 'The settings have been updated.'
     else
       render :edit
     end
@@ -18,8 +17,9 @@ class SettingsController < ApplicationController
   private
 
   def setting_params
-    params.require(:setting).permit(:value)
+    params.require(:setting).permit(:registration_enabled, :blog_name)
   end
+
 
   def authorize_superadmin
     unless current_user && current_user.superadmin?
