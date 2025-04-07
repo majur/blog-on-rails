@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resource :setting
   resources :users
   resources :posts
+  resources :pages
 
   root "main#index"
 end

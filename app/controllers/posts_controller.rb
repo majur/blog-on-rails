@@ -12,7 +12,6 @@ class PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
     if @post.published || (user_signed_in? && current_user == @post.user)
     else
       redirect_to root_path, alert: "This post is not available."
@@ -35,7 +34,6 @@ class PostsController < ApplicationController
   end
 
   def edit
-    @post = Post.find(params[:id])
     unless current_user.superadmin? || (current_user.author? && @post.user == current_user)
       redirect_to root_path, alert: 'You are not authorized to edit this post.'
     end
@@ -50,7 +48,6 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    @post = Post.find(params[:id])
     if @post.destroy
       redirect_to posts_url, notice: 'Post was successfully destroyed.'
     else
@@ -61,7 +58,7 @@ class PostsController < ApplicationController
   private
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.find_by(slug: params[:id]) || Post.find(params[:id])
   end
 
   def post_params
