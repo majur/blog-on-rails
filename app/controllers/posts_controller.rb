@@ -1,14 +1,20 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
+  before_action :authenticate_user!, except: [:show, :index]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author, only: [:edit, :update, :new, :create, :index]
+  before_action :authorize_author, only: [:edit, :update, :new, :create]
   before_action :check_post_visibility, only: [:show]
 
   def index
-    if current_user.superadmin?
-      @posts = Post.all
+    # Zobrazí všetky publikované príspevky pre neprihlásených používateľov
+    # alebo všetky príspevky pre admina a vlastné príspevky pre autorov
+    if user_signed_in?
+      if current_user.superadmin?
+        @posts = Post.all
+      else
+        @posts = current_user.posts
+      end
     else
-      @posts = current_user.posts
+      @posts = Post.published
     end
   end
 

@@ -1,14 +1,20 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, except: [:show]
+  before_action :authenticate_user!, except: [:show, :index]
   before_action :set_page, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author, only: [:edit, :update, :new, :create, :index]
+  before_action :authorize_author, only: [:edit, :update, :new, :create]
   before_action :check_page_visibility, only: [:show]
 
   def index
-    if current_user.superadmin?
-      @pages = Page.all
+    # Zobrazí všetky publikované stránky pre neprihlásených používateľov
+    # alebo všetky stránky pre admina a vlastné stránky pre autorov
+    if user_signed_in?
+      if current_user.superadmin?
+        @pages = Page.all
+      else
+        @pages = current_user.pages
+      end
     else
-      @pages = current_user.pages
+      @pages = Page.published
     end
   end
 
