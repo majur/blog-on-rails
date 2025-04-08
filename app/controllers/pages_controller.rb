@@ -1,7 +1,8 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:show]
   before_action :set_page, only: [:show, :edit, :update, :destroy]
   before_action :authorize_author, only: [:edit, :update, :new, :create, :index]
+  before_action :check_page_visibility, only: [:show]
 
   def index
     if current_user.superadmin?
@@ -12,10 +13,8 @@ class PagesController < ApplicationController
   end
 
   def show
-    if @page.published || (user_signed_in? && current_user == @page.user)
-    else
-      redirect_to root_path, alert: "This page is not available."
-    end
+    # @page is set by before_action :set_page
+    # visibility check is handled by before_action :check_page_visibility
   end
 
   def new
@@ -59,6 +58,12 @@ class PagesController < ApplicationController
 
   def set_page
     @page = Page.find_by(slug: params[:id]) || Page.find(params[:id])
+  end
+
+  def check_page_visibility
+    unless @page.published || (user_signed_in? && current_user == @page.user)
+      redirect_to root_path, alert: "This page is not available."
+    end
   end
 
   def page_params

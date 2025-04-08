@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:show]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :authorize_author, only: [:edit, :update, :new, :create, :index]
+  before_action :check_post_visibility, only: [:show]
 
   def index
     if current_user.superadmin?
@@ -12,10 +13,8 @@ class PostsController < ApplicationController
   end
 
   def show
-    if @post.published || (user_signed_in? && current_user == @post.user)
-    else
-      redirect_to root_path, alert: "This post is not available."
-    end
+    # @post is set by before_action :set_post
+    # visibility check is handled by before_action :check_post_visibility
   end
 
   def new
@@ -59,6 +58,12 @@ class PostsController < ApplicationController
 
   def set_post
     @post = Post.find_by(slug: params[:id]) || Post.find(params[:id])
+  end
+
+  def check_post_visibility
+    unless @post.published || (user_signed_in? && current_user == @post.user)
+      redirect_to root_path, alert: "This post is not available."
+    end
   end
 
   def post_params
