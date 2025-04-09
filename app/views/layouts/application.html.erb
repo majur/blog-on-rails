@@ -38,6 +38,8 @@
         <% if current_user.superadmin? %>
           <%= link_to "Blog Settings", edit_setting_path %>
           <%= link_to "Users", users_path %>
+          <%= link_to "Pages", pages_path %>
+          <%= link_to "Posts", posts_path %>
         <% else %>
         <% end %>
         <%= button_to "Log out", session_path, method: :delete %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_23_174205) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_07_212559) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -49,6 +49,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_23_174205) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "pages", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.integer "user_id", null: false
+    t.boolean "published"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "slug"
+    t.index ["slug"], name: "index_pages_on_slug", unique: true
+    t.index ["user_id"], name: "index_pages_on_user_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "content"
@@ -56,6 +68,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_23_174205) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "published"
+    t.string "slug"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -73,10 +87,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_23_174205) do
     t.datetime "updated_at", null: false
     t.boolean "superadmin"
     t.string "name"
-    t.boolean "author"
+    t.boolean "author", default: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "pages", "users"
   add_foreign_key "posts", "users"
 end

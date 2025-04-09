@@ -12,47 +12,63 @@ on:
     branches: [ "main" ]
 jobs:
   test:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:11-alpine
-        ports:
-          - "5432:5432"
-        env:
-          POSTGRES_DB: rails_test
-          POSTGRES_USER: rails
-          POSTGRES_PASSWORD: password
+    runs-on: ubuntu-22.04
     env:
       RAILS_ENV: test
-      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       # Add or replace dependency steps here
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.1.2'
           bundler-cache: true
+      # Vytvor binstuby pre potrebné gemy
+      - name: Generate binstubs
+        run: |
+          bundle binstubs bundler-audit
+          bundle binstubs brakeman
+          bundle binstubs rubocop
       # Add or replace database setup steps here
       - name: Set up database schema
         run: bin/rails db:schema:load
+      # Kompiluj assety pre testovacie prostredie
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install Yarn
+        run: npm install -g yarn
+      - name: Install JavaScript dependencies
+        run: yarn install
+      - name: Precompile Webpacker assets
+        run: |
+          RAILS_ENV=test bundle exec rake webpacker:compile
       # Add or replace test runners here
       - name: Run tests
         run: bin/rake
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.1.2'
           bundler-cache: true
+      # Vytvor binstuby pre potrebné gemy
+      - name: Generate binstubs
+        run: |
+          bundle binstubs bundler-audit
+          bundle binstubs brakeman
+          bundle binstubs rubocop
       # Add or replace any other lints here
       - name: Security audit dependencies
-        run: bin/bundler-audit --update
+        run: bundle exec bundler-audit --update
       - name: Security audit application code
-        run: bin/brakeman -q -w2
+        run: bundle exec brakeman -q -w2
       - name: Lint Ruby files
-        run: bin/rubocop --parallel
+        run: bundle exec rubocop --parallel

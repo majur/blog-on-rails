@@ -1,0 +1,54 @@
+require "test_helper"
+
+class PagesControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:one)
+    @page = pages(:one)
+    
+    post session_url, params: { email: @user.email, password: 'password' }
+  end
+
+  test "should get index" do
+    get pages_url
+    assert_response :success
+  end
+
+  test "should get show" do
+    get page_url(@page)
+    assert_response :success
+  end
+
+  test "should get new" do
+    get new_page_url
+    assert_response :success
+  end
+
+  test "should create page" do
+    assert_difference("Page.count") do
+      post pages_url, params: { page: { title: "Test Page", content: "Test Content" } }
+    end
+
+    page = Page.find_by(title: "Test Page")
+    assert_redirected_to page_url(page)
+  end
+
+  test "should get edit" do
+    get edit_page_url(@page)
+    assert_response :success
+  end
+
+  test "should update page" do
+    patch page_url(@page), params: { page: { title: "Updated Title" } }
+    
+    @page.reload
+    assert_redirected_to page_url(@page)
+  end
+
+  test "should destroy page" do
+    assert_difference("Page.count", -1) do
+      delete page_url(@page)
+    end
+
+    assert_redirected_to pages_url
+  end
+end
