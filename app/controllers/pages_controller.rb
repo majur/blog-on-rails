@@ -5,8 +5,6 @@ class PagesController < ApplicationController
   before_action :check_page_visibility, only: [:show]
 
   def index
-    # Zobrazí všetky publikované stránky pre neprihlásených používateľov
-    # alebo všetky stránky pre admina a vlastné stránky pre autorov
     if user_signed_in?
       if current_user.superadmin?
         @pages = Page.all
@@ -19,8 +17,6 @@ class PagesController < ApplicationController
   end
 
   def show
-    # @page is set by before_action :set_page
-    # visibility check is handled by before_action :check_page_visibility
   end
 
   def new
