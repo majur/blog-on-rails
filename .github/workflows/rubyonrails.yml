@@ -33,6 +33,18 @@ jobs:
       # Add or replace database setup steps here
       - name: Set up database schema
         run: bin/rails db:schema:load
+      # Kompiluj assety pre testovacie prostredie
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install Yarn
+        run: npm install -g yarn
+      - name: Install JavaScript dependencies
+        run: yarn install
+      - name: Precompile Webpacker assets
+        run: |
+          RAILS_ENV=test bundle exec rake webpacker:compile
       # Add or replace test runners here
       - name: Run tests
         run: bin/rake
