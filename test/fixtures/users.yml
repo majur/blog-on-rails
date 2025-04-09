@@ -2,16 +2,20 @@
 
 one:
   email: test@test.com
-  password_digest: password1
+  password_digest: <%= BCrypt::Password.create('password') %>
+  author: true
 
 two:
   email: test2@test.com
-  password_digest: password2
+  password_digest: <%= BCrypt::Password.create('password') %>
+  author: true
 
 three:
   email: three@test.com
-  password_digest: password2three
+  password_digest: <%= BCrypt::Password.create('password') %>
+  author: false
 
 example:
   email: example@example.com
   password_digest: <%= BCrypt::Password.create('password') %>
+  author: false

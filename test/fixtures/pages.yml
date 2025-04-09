@@ -5,9 +5,11 @@ one:
   content: MyText
   user: one
   published: false
+  slug: my-string
 
 two:
-  title: MyString
-  content: MyText
+  title: AnotherString
+  content: AnotherText
   user: two
   published: false
+  slug: another-string
