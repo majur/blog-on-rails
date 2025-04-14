@@ -1,0 +1,75 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'config/puma.rb'
+    - 'config/spring.rb'
+    - 'config/environments/*'
+    - 'config/initializers/*'
+
+# Documentation is required only for public APIs
+Style/Documentation:
+  Enabled: false
+
+# We don't need to document migration classes
+Style/DocumentationMethod:
+  Enabled: false
+
+# Allow larger blocks in specs and configurations
+Metrics/BlockLength:
+  Exclude:
+    - 'config/**/*'
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'Rakefile'
+    - '**/*.rake'
+
+# Allow longer methods in some cases
+Metrics/MethodLength:
+  Max: 15
+  Exclude:
+    - 'test/**/*'
+
+# Allow more complex methods in some cases
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - 'test/**/*'
+
+# Allow more complex code in controllers
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+# Allow more complex code in controllers
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# Allow longer lines for readability
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+
+# Don't suggest frozen string literal comment for all files
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+  Exclude:
+    - 'bin/**/*'
+    - 'db/migrate/**/*'
+
+# Don't warn about "dangerous" boolean methods
+Naming/PredicateName:
+  Enabled: false
+
+# Allow non-ASCII comments for internationalization
+Style/AsciiComments:
+  Enabled: false 

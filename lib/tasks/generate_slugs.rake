@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 namespace :slugs do
-  desc "Generate slugs for existing pages and posts"
+  desc 'Generate slugs for existing pages and posts'
   task generate: :environment do
-    puts "Generating slugs for Pages..."
-    
+    puts 'Generating slugs for Pages...'
+
     Page.find_each do |page|
       if page.slug.blank?
         page.title_will_change! # Trigger the before_validation :generate_slug callback
@@ -10,9 +12,9 @@ namespace :slugs do
         puts "Generated slug for Page ##{page.id}: #{page.slug}"
       end
     end
-    
-    puts "Generating slugs for Posts..."
-    
+
+    puts 'Generating slugs for Posts...'
+
     Post.find_each do |post|
       if post.slug.blank?
         post.title_will_change! # Trigger the before_validation :generate_slug callback
@@ -20,7 +22,7 @@ namespace :slugs do
         puts "Generated slug for Post ##{post.id}: #{post.slug}"
       end
     end
-    
-    puts "Done!"
+
+    puts 'Done!'
   end
-end 
+end

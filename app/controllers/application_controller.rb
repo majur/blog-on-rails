@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Base controller class that all other controllers inherit from
+# Provides common functionality for authentication and session management
 class ApplicationController < ActionController::Base
   before_action :set_settings
 
@@ -8,9 +12,9 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    unless user_signed_in? || (controller_name == 'posts' && action_name == 'show')
-      redirect_to root_path, alert: "You must be logged in to do that."
-    end
+    return if user_signed_in? || (controller_name == 'posts' && action_name == 'show')
+
+    redirect_to root_path, alert: 'You must be logged in to do that.'
   end
 
   def current_user
@@ -33,7 +37,7 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
   end
 
-  def logout(user)
+  def logout(_user)
     Current.user = nil
     reset_session
   end

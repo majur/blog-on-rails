@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
+# Controller responsible for managing application settings
+# Only superadmin users can edit and update settings
 class SettingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :authorize_superadmin, only: [:edit, :update]
+  before_action :authorize_superadmin, only: %i[edit update]
 
-  def edit
-  end
-
+  def edit; end
 
   def update
     if @settings.update(setting_params)
@@ -20,10 +22,9 @@ class SettingsController < ApplicationController
     params.require(:setting).permit(:registration_enabled, :blog_name)
   end
 
-
   def authorize_superadmin
-    unless current_user && current_user.superadmin?
-      redirect_to root_path, alert: 'You are not authorized to access this page.'
-    end
+    return if current_user&.superadmin?
+
+    redirect_to root_path, alert: 'You are not authorized to access this page.'
   end
 end
