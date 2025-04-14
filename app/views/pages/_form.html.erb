@@ -16,6 +16,11 @@
   </div>
 
   <div>
+    <%= form.label :is_blog_page, "Show blog posts on this page" %>
+    <%= form.check_box :is_blog_page %>
+  </div>
+
+  <div>
     <%= form.submit "Save page" %>
   </div>
 <% end %> 

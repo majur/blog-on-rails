@@ -20,7 +20,11 @@ class PagesController < ApplicationController
              end
   end
 
-  def show; end
+  def show
+    return unless @page.is_blog_page
+
+    @posts = Post.published.order(created_at: :desc)
+  end
 
   def new
     @page = Page.new
@@ -72,7 +76,7 @@ class PagesController < ApplicationController
   end
 
   def page_params
-    params.require(:page).permit(:title, :content, :user_id, :published)
+    params.require(:page).permit(:title, :content, :user_id, :published, :is_blog_page)
   end
 
   def authorize_author

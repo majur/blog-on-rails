@@ -9,6 +9,8 @@ class Page < ApplicationRecord
   has_rich_text :content
   scope :published, -> { where(published: true) }
 
+  attribute :is_blog_page, :boolean, default: false
+
   before_validation :generate_slug, if: :title_changed?
 
   def to_param
