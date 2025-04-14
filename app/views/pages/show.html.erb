@@ -8,7 +8,15 @@
   <%= @page.content %>
 </div>
 <hr class="solid">
-<p><em>Published by <%= @page.user.name %> on <%= @page.created_at.strftime('%B %d, %Y') %></em></p>
+
+<% if @page.is_blog_page && @posts.present? %>
+  <div class="posts">
+    <h2>Posts</h2>
+    <% @posts.each do |post| %>
+      <p>- <%= link_to post.title, post %> - <em>Published by <%= post.user.name %> dňa <%= post.created_at.strftime('%d.%m.%Y') %></em></p>
+    <% end %>
+  </div>
+<% end %>
 
 <div class="links">
   <% if user_signed_in? && (current_user.superadmin? || (current_user.author? && @page.user == current_user)) %>
