@@ -1,23 +1,26 @@
+# frozen_string_literal: true
+
+# Controller for managing static pages
+# Handles CRUD operations for pages and their publication status
 class PagesController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :index]
-  before_action :set_page, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author, only: [:edit, :update, :new, :create]
+  before_action :authenticate_user!, except: %i[show index]
+  before_action :set_page, only: %i[show edit update destroy]
+  before_action :authorize_author, only: %i[edit update new create]
   before_action :check_page_visibility, only: [:show]
 
   def index
-    if user_signed_in?
-      if current_user.superadmin?
-        @pages = Page.all
-      else
-        @pages = current_user.pages
-      end
-    else
-      @pages = Page.published
-    end
+    @pages = if user_signed_in?
+               if current_user.superadmin?
+                 Page.all
+               else
+                 current_user.pages
+               end
+             else
+               Page.published
+             end
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @page = Page.new
@@ -35,9 +38,9 @@ class PagesController < ApplicationController
   end
 
   def edit
-    unless current_user.superadmin? || (current_user.author? && @page.user == current_user)
-      redirect_to root_path, alert: 'You are not authorized to edit this page.'
-    end
+    return if current_user.superadmin? || (current_user.author? && @page.user == current_user)
+
+    redirect_to root_path, alert: 'You are not authorized to edit this page.'
   end
 
   def update
@@ -63,9 +66,9 @@ class PagesController < ApplicationController
   end
 
   def check_page_visibility
-    unless @page.published || (user_signed_in? && current_user == @page.user)
-      redirect_to root_path, alert: "This page is not available."
-    end
+    return if @page.published || (user_signed_in? && current_user == @page.user)
+
+    redirect_to root_path, alert: 'This page is not available.'
   end
 
   def page_params
@@ -73,8 +76,8 @@ class PagesController < ApplicationController
   end
 
   def authorize_author
-    unless current_user && (current_user.superadmin? || current_user.author?)
-      redirect_to root_path, alert: 'You are not authorized to access this page.'
-    end
+    return if current_user && (current_user.superadmin? || current_user.author?)
+
+    redirect_to root_path, alert: 'You are not authorized to access this page.'
   end
 end

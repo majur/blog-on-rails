@@ -1,21 +1,25 @@
+# frozen_string_literal: true
+
+# Controller for managing blog posts
+# Handles CRUD operations for posts and their publication status
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :index]
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author, only: [:edit, :update, :new, :create]
+  before_action :authenticate_user!, except: %i[show index]
+  before_action :set_post, only: %i[show edit update destroy]
+  before_action :authorize_author, only: %i[edit update new create]
   before_action :check_post_visibility, only: [:show]
 
   def index
     # Zobrazí všetky publikované príspevky pre neprihlásených používateľov
     # alebo všetky príspevky pre admina a vlastné príspevky pre autorov
-    if user_signed_in?
-      if current_user.superadmin?
-        @posts = Post.all
-      else
-        @posts = current_user.posts
-      end
-    else
-      @posts = Post.published
-    end
+    @posts = if user_signed_in?
+               if current_user.superadmin?
+                 Post.all
+               else
+                 current_user.posts
+               end
+             else
+               Post.published
+             end
   end
 
   def show
@@ -39,9 +43,9 @@ class PostsController < ApplicationController
   end
 
   def edit
-    unless current_user.superadmin? || (current_user.author? && @post.user == current_user)
-      redirect_to root_path, alert: 'You are not authorized to edit this post.'
-    end
+    return if current_user.superadmin? || (current_user.author? && @post.user == current_user)
+
+    redirect_to root_path, alert: 'You are not authorized to edit this post.'
   end
 
   def update
@@ -67,9 +71,9 @@ class PostsController < ApplicationController
   end
 
   def check_post_visibility
-    unless @post.published || (user_signed_in? && current_user == @post.user)
-      redirect_to root_path, alert: "This post is not available."
-    end
+    return if @post.published || (user_signed_in? && current_user == @post.user)
+
+    redirect_to root_path, alert: 'This post is not available.'
   end
 
   def post_params
@@ -77,8 +81,8 @@ class PostsController < ApplicationController
   end
 
   def authorize_author
-    unless current_user && (current_user.superadmin? || current_user.author?)
-      redirect_to root_path, alert: 'You are not authorized to access this page.'
-    end
+    return if current_user && (current_user.superadmin? || current_user.author?)
+
+    redirect_to root_path, alert: 'You are not authorized to access this page.'
   end
 end

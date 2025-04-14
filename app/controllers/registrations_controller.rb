@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+# Controller responsible for user registration
+# Handles new user sign-ups and account creation
 class RegistrationsController < ApplicationController
-  before_action :check_registration_enabled, only: [:new, :create]
+  before_action :check_registration_enabled, only: %i[new create]
 
   def new
     @user = User.new
@@ -14,7 +18,7 @@ class RegistrationsController < ApplicationController
       login @user
       redirect_to root_path, notice: 'Registration successful. Check your email.'
     else
-      if @user.errors[:email].include?("has already been taken")
+      if @user.errors[:email].include?('has already been taken')
         flash.now[:alert] = 'Email has already been taken. If this is your account, please log in.'
       end
       render :new, status: :unprocessable_entity
@@ -32,6 +36,9 @@ class RegistrationsController < ApplicationController
   end
 
   def check_registration_enabled
-    redirect_to root_path, alert: 'User registration is not currently enabled.' unless Setting.exists?(registration_enabled: true) || User.count.zero?
+    return if Setting.exists?(registration_enabled: true) || User.count.zero?
+
+    redirect_to root_path,
+                alert: 'User registration is not currently enabled.'
   end
 end

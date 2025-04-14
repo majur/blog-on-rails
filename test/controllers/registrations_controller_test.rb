@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class RegistrationsControllerTest < ActionController::TestCase
@@ -32,7 +34,8 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   test 'should not create superadmin on subsequent user creation' do
     # Create a superadmin first
-    User.create(email: 'superadmin@example.com', password: 'password', password_confirmation: 'password', superadmin: true)
+    User.create(email: 'superadmin@example.com', password: 'password', password_confirmation: 'password',
+                superadmin: true)
 
     assert_difference('User.count') do
       post :create, params: { user: @user_params }
@@ -40,5 +43,4 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     assert_not assigns(:user).superadmin, 'Subsequent users should not be superadmins'
   end
-
 end

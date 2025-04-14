@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+# Controller for managing users
+# Handles user administration tasks for superadmins
 class UsersController < ApplicationController
-  before_action :authorize_superadmin, only: [:index, :edit, :update, :show]
+  before_action :authorize_superadmin, only: %i[index edit update show]
 
   def edit
     @user = User.find(params[:id])
@@ -9,7 +13,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update(user_params)
-      redirect_to user_path(@user), notice: "User information updated successfully."
+      redirect_to user_path(@user), notice: 'User information updated successfully.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -26,9 +30,9 @@ class UsersController < ApplicationController
   private
 
   def authorize_superadmin
-    unless current_user.superadmin?
-      redirect_to root_path, alert: "You are not authorized to perform this action."
-    end
+    return if current_user.superadmin?
+
+    redirect_to root_path, alert: 'You are not authorized to perform this action.'
   end
 
   def user_params
