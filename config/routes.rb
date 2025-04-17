@@ -19,5 +19,10 @@ Rails.application.routes.draw do
   resources :posts
   resources :pages
 
+  # Menu management routes
+  resources :menu, only: %i[index update] do
+    patch :reorder, on: :member
+  end
+
   root 'main#index'
 end

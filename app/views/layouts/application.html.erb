@@ -24,8 +24,26 @@
     <% else %>
       <h1>New blog</h1>
     <% end %>
+    
+    <% # Display main menu %>
+    <nav class="main-navigation">
+      <ul class="main-menu">
+        <% menu_items = Page.in_menu %>
+        <% if menu_items.present? %>
+          <% first_page = menu_items.first %>
+          <li><%= link_to first_page.title, root_path %></li>
+          <% menu_items.offset(1).each do |page| %>
+            <li><%= link_to page.title, page_path(page) %></li>
+          <% end %>
+        <% else %>
+          <li><%= link_to "Home", root_path %></li>
+        <% end %>
+      </ul>
+    </nav>
     </header>
+    
     <%= yield %>
+    
     <footer>
       <nav>
       <% if user_signed_in? %>
@@ -39,6 +57,7 @@
           <%= link_to "Blog Settings", edit_setting_path %>
           <%= link_to "Users", users_path %>
           <%= link_to "Pages", pages_path %>
+          <%= link_to "Menu", menu_index_path %>
           <%= link_to "Posts", posts_path %>
         <% else %>
         <% end %>
@@ -47,7 +66,7 @@
         <% if Setting.exists?(registration_enabled: true) || !Setting.exists?(registration_enabled: [true, false]) %>
           <%= link_to "Sign Up", new_registration_path %>
         <% end %>
-        <%= link_to "Log in", new_session_path %>
+        <p>Created with <a href="https://github.com/majur/blog-on-rails/" target="_blank">Blog on Rails</a></p>
       <% end %>
     </nav>
     </footer>

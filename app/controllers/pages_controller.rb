@@ -76,7 +76,7 @@ class PagesController < ApplicationController
   end
 
   def page_params
-    params.require(:page).permit(:title, :content, :user_id, :published, :is_blog_page)
+    params.require(:page).permit(:title, :content, :user_id, :published, :is_blog_page, :is_in_menu)
   end
 
   def authorize_author

@@ -4,6 +4,21 @@
 # Handles rendering the home page and dashboard
 class MainController < ApplicationController
   def index
-    @posts = Post.published.order(created_at: :desc)
+    # Najprv nájdeme prvú stránku z menu, ak existuje
+    first_menu_page = Page.in_menu.first
+
+    if first_menu_page
+      # Nastavíme @page pre view, aby sme mohli použiť šablónu stránky
+      @page = first_menu_page
+
+      # Ak je to blogová stránka, načítame aj príspevky
+      @posts = Post.published.order(created_at: :desc) if first_menu_page.is_blog_page
+
+      # Použijeme view stránky
+      render 'pages/show'
+    else
+      # Ak neexistuje žiadna stránka v menu, zobrazíme len príspevky
+      @posts = Post.published.order(created_at: :desc)
+    end
   end
 end
