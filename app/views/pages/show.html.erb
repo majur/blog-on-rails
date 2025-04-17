@@ -1,16 +1,13 @@
-<p id="notice"><%= notice %></p>
-
-<h1>
+<h2>
   <%= @page.title %>
-</h1>
+</h2>
 <div>
   <%= @page.content %>
 </div>
-<hr class="solid">
 <% if @page.is_blog_page && @posts.present? %>
   <div class="posts">
     <% @posts.each do |post| %>
-      <p>- <%= link_to post.title, post %> - <em>Published by <%= post.user.name %> dňa <%= post.created_at.strftime('%d.%m.%Y') %></em></p>
+      <p>- <%= link_to post.title, post %> - <em>Published by <%= post.user.name %> on <%= post.created_at.strftime('%d.%m.%Y') %></em></p>
     <% end %>
   </div>
 <% end %>

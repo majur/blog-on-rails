@@ -1,17 +1,17 @@
-<h1>Správa menu</h1>
+<h1>Menu Management</h1>
 
 <div class="mb-4">
-  <h2>Aktuálne položky menu</h2>
+  <h2>Current Menu Items</h2>
   <% if @menu_items.empty? %>
-    <p>Menu neobsahuje žiadne položky.</p>
+    <p>The menu doesn't contain any items.</p>
   <% else %>
     <table class="table">
       <thead>
         <tr>
-          <th>Názov</th>
+          <th>Name</th>
           <th>Slug</th>
-          <th>Pozícia</th>
-          <th>Akcie</th>
+          <th>Position</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -31,17 +31,17 @@
                 class: "btn btn-sm btn-outline-primary me-1",
                 disabled: page.last? %>
               
-              <%= button_to "Na začiatok", reorder_menu_path(page, direction: 'top'), 
+              <%= button_to "To Top", reorder_menu_path(page, direction: 'top'), 
                 method: :patch,
                 class: "btn btn-sm btn-outline-secondary me-1",
                 disabled: page.first? %>
               
-              <%= button_to "Na koniec", reorder_menu_path(page, direction: 'bottom'), 
+              <%= button_to "To Bottom", reorder_menu_path(page, direction: 'bottom'), 
                 method: :patch,
                 class: "btn btn-sm btn-outline-secondary me-1",
                 disabled: page.last? %>
               
-              <%= button_to "Odstrániť z menu", menu_path(page), 
+              <%= button_to "Remove from menu", menu_path(page), 
                 method: :patch,
                 params: { page: { is_in_menu: false } },
                 class: "btn btn-sm btn-outline-danger" %>
@@ -54,16 +54,16 @@
 </div>
 
 <div class="mb-4">
-  <h2>Dostupné stránky</h2>
+  <h2>Available Pages</h2>
   <% if @pages.empty? %>
-    <p>Nie sú dostupné žiadne stránky, ktoré by bolo možné pridať do menu.</p>
+    <p>There are no available pages that could be added to the menu.</p>
   <% else %>
     <table class="table">
       <thead>
         <tr>
-          <th>Názov</th>
+          <th>Name</th>
           <th>Slug</th>
-          <th>Akcie</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -72,7 +72,7 @@
             <td><%= page.title %></td>
             <td><%= page.slug %></td>
             <td>
-              <%= button_to "Pridať do menu", menu_path(page), 
+              <%= button_to "Add to menu", menu_path(page), 
                 method: :patch,
                 params: { page: { is_in_menu: true } },
                 class: "btn btn-sm btn-outline-success" %>
@@ -85,5 +85,5 @@
 </div>
 
 <div class="mt-4">
-  <%= link_to "Späť na hlavnú stránku", root_path, class: "btn btn-primary" %>
+  <%= link_to "Back to home page", root_path, class: "btn btn-primary" %>
 </div> 

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-# Model representing static pages in the application
-# Each page has a title, content, slug for friendly URLs and a published status
+# Page model for the main content pages of the application
+# Each page has a title, content, slug, and can belong to a user
 class Page < ApplicationRecord
   belongs_to :user
+  has_many :posts, dependent: nil
   validates :title, presence: true
   validates :slug, uniqueness: true, allow_blank: true
   has_rich_text :content
@@ -26,14 +27,14 @@ class Page < ApplicationRecord
 
   def handle_menu_position
     if is_in_menu
-      # Ak stránka ešte nemá pozíciu, pridáme ju na koniec zoznamu
+      # If the page doesn't have a position yet, add it to the end of the list
       if !position || position.zero?
         self.position = Page.in_menu.maximum(:position).to_i + 1
       end
     else
-      # Ak sa stránka odstraňuje z menu, vynulujeme jej pozíciu
+      # If the page is being removed from the menu, reset its position
       self.position = nil
-      # Prepočítame pozície ostatných stránok v menu
+      # Recalculate positions for other pages in the menu
       Page.in_menu.order(:position).each_with_index do |page, index|
         page.update_column(:position, index + 1) if page.position != index + 1
       end
@@ -43,11 +44,11 @@ class Page < ApplicationRecord
   def generate_slug
     self.slug = title.to_s.parameterize
     # Handle duplicate slugs by adding a number at the end if necessary
+    duplicate_check = 1
     original_slug = slug
-    counter = 2
-    while Page.where(slug: slug).where.not(id: id).exists?
-      self.slug = "#{original_slug}-#{counter}"
-      counter += 1
+    while Page.where.not(id: id).exists?(slug: slug)
+      self.slug = "#{original_slug}-#{duplicate_check}"
+      duplicate_check += 1
     end
   end
 end
