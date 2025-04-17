@@ -1,6 +1,6 @@
 <h1>Reset Your Password</h1>
 
-<%= form_with model: @user, url: password_reset_path do |form| %>
+<%= form_with url: password_reset_path, scope: :password_reset do |form| %>
 
   <div>
     <%= form.label :email %>

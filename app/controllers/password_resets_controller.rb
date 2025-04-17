@@ -4,10 +4,12 @@
 # Manages the workflow for generating and processing password reset tokens
 class PasswordResetsController < ApplicationController
   before_action :set_user_by_token, only: %i[edit update]
-  def new; end
+  def new
+    @user = User.new
+  end
 
   def create
-    if (user = User.find_by(email: params[:email]))
+    if (user = User.find_by(email: params[:password_reset][:email]))
       PasswordMailer.with(
         user: user,
         token: user.generate_token_for(:password_reset)

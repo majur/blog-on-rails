@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_14_210945) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_000001) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -58,6 +58,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_14_210945) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.boolean "is_blog_page"
+    t.boolean "is_in_menu", default: false
+    t.integer "position"
+    t.index ["position"], name: "index_pages_on_position"
     t.index ["slug"], name: "index_pages_on_slug", unique: true
     t.index ["user_id"], name: "index_pages_on_user_id"
   end
