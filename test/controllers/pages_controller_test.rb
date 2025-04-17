@@ -7,7 +7,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
     @page = pages(:one)
 
-    post session_url, params: { email: @user.email, password: 'password' }
+    post session_url, params: { user: { email: @user.email, password: 'password' } }
   end
 
   test 'should get index' do
