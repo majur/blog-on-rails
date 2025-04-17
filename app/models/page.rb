@@ -10,7 +10,7 @@ class Page < ApplicationRecord
   has_rich_text :content
   scope :published, -> { where(published: true) }
   scope :in_menu, -> { where(is_in_menu: true).order(position: :asc) }
-  
+
   acts_as_list add_new_at: :bottom, top_of_list: 0
 
   attribute :is_blog_page, :boolean, default: false
@@ -28,9 +28,7 @@ class Page < ApplicationRecord
   def handle_menu_position
     if is_in_menu
       # If the page doesn't have a position yet, add it to the end of the list
-      if !position || position.zero?
-        self.position = Page.in_menu.maximum(:position).to_i + 1
-      end
+      self.position = Page.in_menu.maximum(:position).to_i + 1 if !position || position.zero?
     else
       # If the page is being removed from the menu, reset its position
       self.position = nil
