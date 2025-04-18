@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Script to deploy the application using Kamal
+
+set -e # Exit on error
+
+echo "Committing local changes..."
+git add -A
+git commit -m "Deploy changes" || echo "No changes to commit"
+
+echo "Updating git repository..."
+git pull
+
+echo "Setting up with Kamal..."
+kamal setup --no-registry-cache
+
+# Build the image
+echo "=== Building the application image ==="
+kamal build
+
+# Push the image to the registry
+echo "=== Pushing the image to registry ==="
+kamal push
+
+# Deploy the application
+echo "=== Deploying the application ==="
+kamal deploy
+
+echo "=== Deployment completed ===" 

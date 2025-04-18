@@ -49,3 +49,13 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# Kamal specific
+.env
+.kamal/
+
+# Docker related
+docker-compose.override.yml
+
+# Deployment specific
+.ssh/
