@@ -1,4 +1,7 @@
 {
+  "name": "blog-on-rails",
+  "private": true,
+  "license": "MIT",
   "dependencies": {
     "@rails/actiontext": "^7.1.3",
     "@rails/ujs": "^7.1.3",
