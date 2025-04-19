@@ -2,7 +2,17 @@
 
 # If running the rails server then create or migrate existing database
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
+  # Príprava databázy
   ./bin/rails db:prepare
+  
+  # Vytvorenie jednoduchého health check súboru
+  mkdir -p public
+  echo "OK" > public/up.txt
+  
+  # Umožniť, aby public súbory boli čitateľné a prístupné
+  chmod -R 755 public
+  
+  echo "Zdravotná kontrola: http://localhost:3000/up by mala vrátiť OK."
 fi
 
 exec "${@}"
