@@ -5,14 +5,8 @@ if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
   # Príprava databázy
   ./bin/rails db:prepare
   
-  # Vytvorenie jednoduchého health check súboru
-  mkdir -p public
-  echo "OK" > public/up.txt
-  
-  # Umožniť, aby public súbory boli čitateľné a prístupné
-  chmod -R 755 public
-  
-  echo "Zdravotná kontrola: http://localhost:3000/up by mala vrátiť OK."
+  echo "Server začne počúvať na http://0.0.0.0:3000"
+  echo "Zdravotná kontrola sa bude volať na http://localhost:3000/up"
 fi
 
 exec "${@}"
