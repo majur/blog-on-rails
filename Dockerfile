@@ -7,6 +7,11 @@ FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 # Rails app lives here
 WORKDIR /rails
 
+# Install base packages
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 libsqlite3-0 libyaml-dev && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Set production environment
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
@@ -47,7 +52,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libyaml-dev nodejs && \
+    apt-get install --no-install-recommends -y curl nodejs && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
@@ -55,7 +60,8 @@ COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp public
 USER rails:rails
 
@@ -69,4 +75,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=10s --timeout=10s --start-period=15s --retries=5 \
   CMD curl -f http://localhost:3000/up || exit 1
 
+# Spusť priamo Rails server
 CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]

@@ -61,7 +61,7 @@ volumes:
 # Configure a custom healthcheck (default is /up on port 3000)
 # healthcheck:
 #   path: /up
-#   port: 3000
+#   port: 80
 #   timeout: 60  # Predĺženie časového limitu na 60 sekúnd
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
@@ -73,6 +73,9 @@ volumes:
 # boot:
 #   limit: 10 # Can also specify as a percentage of total hosts, such as "25%"
 #   wait: 2
+
+# Controls if we can interact with the deploy.
+# interactive: true
 
 # Configure the role used to determine the primary_host. This host takes
 # deploy locks, runs health checks during the deploy, and follow logs, etc.
