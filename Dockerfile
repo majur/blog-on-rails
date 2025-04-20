@@ -72,8 +72,8 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 EXPOSE 3000
 
 # Pridanie explicitnej zdravotnej kontroly - robustnejší prístup
-HEALTHCHECK --interval=10s --timeout=100s --start-period=15s --retries=5 \
-  CMD curl -f http://localhost:3000/up || exit 1
+# HEALTHCHECK --interval=10s --timeout=100s --start-period=15s --retries=5 \
+#   CMD curl -f http://localhost:3000/up || exit 1
 
 # Spusť priamo Rails server
 CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
