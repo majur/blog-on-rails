@@ -6,7 +6,12 @@ image: majur/blog_on_rails
 
 # Deploy to these servers.
 servers:
-  - 37.27.240.43
+  web:
+    - 37.27.240.43
+  job:
+    hosts:
+      - 37.27.240.43
+    cmd: bin/jobs
 
 # Credentials for your image host.
 registry:
@@ -21,9 +26,6 @@ registry:
 # Inject ENV variables into containers (secrets come from .env).
 # Remember to run `kamal env push` after making changes!
 env:
-  clear:
-    RAILS_ENV: production
-    RAILS_LOG_TO_STDOUT: "true"
   secret:
     - RAILS_MASTER_KEY
 
