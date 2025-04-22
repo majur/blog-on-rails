@@ -2,7 +2,11 @@
 
 # If running the rails server then create or migrate existing database
 if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
+  # Príprava databázy
   ./bin/rails db:prepare
+  
+  echo "Server začne počúvať na http://0.0.0.0:3000"
+  echo "Zdravotná kontrola sa bude volať na http://localhost:3000/up"
 fi
 
 exec "${@}"
