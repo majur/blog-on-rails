@@ -1,62 +1,66 @@
 # frozen_string_literal: true
 
 namespace :posts do
-  desc "Vytvorí nový príspevok s danými údajmi"
-  task :create, [:title, :content, :user_id, :published] => :environment do |_, args|
+  desc "Create a new post with given data"
+  task :create, [:title, :content, :user_id, :published, :created_at] => :environment do |_, args|
     unless args[:title] && args[:user_id]
-      puts "CHYBA: Názov a ID používateľa sú povinné parametre."
-      puts "Použitie: rake \"posts:create[názov,obsah,user_id,zverejnený]\"" 
-      puts "Príklad: rake \"posts:create[Môj prvý príspevok,Toto je obsah príspevku,1,true]\""
+      puts "ERROR: Title and user ID are required parameters."
+      puts "Usage: rake \"posts:create[title,content,user_id,published,created_at]\"" 
+      puts "Example: rake \"posts:create[My first post,This is the content of the post,1,true,2023-10-15 14:30:00]\""
       exit 1
     end
 
-    # Konverzia stringových hodnôt na boolean
+    # Convert string values to boolean
     published = args[:published] == "true" 
 
-    # Nájdenie používateľa
+    # Find the user
     user = User.find_by(id: args[:user_id])
     unless user
-      puts "CHYBA: Používateľ s ID #{args[:user_id]} nebol nájdený."
+      puts "ERROR: User with ID #{args[:user_id]} was not found."
       exit 1
     end
     
-    # Vytvorenie príspevku
+    # Create the post
     post = Post.new(
       title: args[:title],
       user: user,
       published: published
     )
 
-    # ActionText obsah sa nastavuje osobitne
+    # Set creation date if provided
+    post.created_at = Time.zone.parse(args[:created_at]) if args[:created_at].present?
+
+    # ActionText content is set separately
     post.content = args[:content] if args[:content].present?
 
     if post.save
-      puts "Príspevok bol úspešne vytvorený:"
+      puts "Post was successfully created:"
       puts "ID: #{post.id}"
-      puts "Názov: #{post.title}"
+      puts "Title: #{post.title}"
       puts "Slug: #{post.slug}"
-      puts "Autor ID: #{post.user_id}"
-      puts "Zverejnený: #{post.published}"
+      puts "Author ID: #{post.user_id}"
+      puts "Published: #{post.published}"
+      puts "Created at: #{post.created_at}"
     else
-      puts "CHYBA pri vytváraní príspevku:"
+      puts "ERROR creating post:"
       post.errors.full_messages.each do |message|
         puts "- #{message}"
       end
     end
   end
 
-  desc "Vytvorí vzorový príspevok pre daného používateľa"
+  desc "Create a sample post for a given user"
   task :create_sample, [:user_id] => :environment do |_, args|
     unless args[:user_id]
-      puts "CHYBA: ID používateľa je povinný parameter."
-      puts "Použitie: rake \"posts:create_sample[user_id]\""
-      puts "Príklad: rake \"posts:create_sample[1]\""
+      puts "ERROR: User ID is a required parameter."
+      puts "Usage: rake \"posts:create_sample[user_id]\""
+      puts "Example: rake \"posts:create_sample[1]\""
       exit 1
     end
 
     Rake::Task["posts:create"].invoke(
-      "Vzorový príspevok", 
-      "Toto je obsah vzorového príspevku. Tu môžete písať svoj text.", 
+      "Sample post", 
+      "This is the content of a sample post. You can write your text here.", 
       args[:user_id], 
       "true"
     )
@@ -64,28 +68,28 @@ namespace :posts do
 end
 
 namespace :pages do
-  desc "Vytvorí novú stránku s danými údajmi"
+  desc "Create a new page with given data"
   task :create, [:title, :content, :user_id, :published, :is_blog_page, :is_in_menu] => :environment do |_, args|
     unless args[:title] && args[:user_id]
-      puts "CHYBA: Názov a ID používateľa sú povinné parametre."
-      puts "Použitie: rake \"pages:create[názov,obsah,user_id,zverejnená,is_blog_page,is_in_menu]\""
-      puts "Príklad: rake \"pages:create[O mne,Toto je obsah stránky,1,true,false,true]\""
+      puts "ERROR: Title and user ID are required parameters."
+      puts "Usage: rake \"pages:create[title,content,user_id,published,is_blog_page,is_in_menu]\""
+      puts "Example: rake \"pages:create[About me,This is the content of the page,1,true,false,true]\""
       exit 1
     end
 
-    # Konverzia stringových hodnôt na boolean
+    # Convert string values to boolean
     published = args[:published] == "true"
     is_blog_page = args[:is_blog_page] == "true"
     is_in_menu = args[:is_in_menu] == "true"
 
-    # Nájdenie používateľa
+    # Find the user
     user = User.find_by(id: args[:user_id])
     unless user
-      puts "CHYBA: Používateľ s ID #{args[:user_id]} nebol nájdený."
+      puts "ERROR: User with ID #{args[:user_id]} was not found."
       exit 1
     end
     
-    # Vytvorenie stránky
+    # Create the page
     page = Page.new(
       title: args[:title],
       user: user,
@@ -94,63 +98,63 @@ namespace :pages do
       is_in_menu: is_in_menu
     )
 
-    # ActionText obsah sa nastavuje osobitne
+    # ActionText content is set separately
     page.content = args[:content] if args[:content].present?
 
     if page.save
-      puts "Stránka bola úspešne vytvorená:"
+      puts "Page was successfully created:"
       puts "ID: #{page.id}"
-      puts "Názov: #{page.title}"
+      puts "Title: #{page.title}"
       puts "Slug: #{page.slug}"
-      puts "Autor ID: #{page.user_id}"
-      puts "Zverejnená: #{page.published}"
-      puts "Je blogová stránka: #{page.is_blog_page}"
-      puts "Je v menu: #{page.is_in_menu}"
-      puts "Pozícia v menu: #{page.position}" if page.is_in_menu
+      puts "Author ID: #{page.user_id}"
+      puts "Published: #{page.published}"
+      puts "Is blog page: #{page.is_blog_page}"
+      puts "Is in menu: #{page.is_in_menu}"
+      puts "Menu position: #{page.position}" if page.is_in_menu
     else
-      puts "CHYBA pri vytváraní stránky:"
+      puts "ERROR creating page:"
       page.errors.full_messages.each do |message|
         puts "- #{message}"
       end
     end
   end
 
-  desc "Vytvorí základné stránky pre blog"
+  desc "Create basic pages for the blog"
   task :create_basic, [:user_id] => :environment do |_, args|
     unless args[:user_id]
-      puts "CHYBA: ID používateľa je povinný parameter."
-      puts "Použitie: rake \"pages:create_basic[user_id]\""
-      puts "Príklad: rake \"pages:create_basic[1]\""
+      puts "ERROR: User ID is a required parameter."
+      puts "Usage: rake \"pages:create_basic[user_id]\""
+      puts "Example: rake \"pages:create_basic[1]\""
       exit 1
     end
 
-    # Vytvorenie blogovej stránky
+    # Create blog page
     Rake::Task["pages:create"].reenable
     Rake::Task["pages:create"].invoke(
       "Blog", 
-      "Toto je blogová stránka, kde sa budú zobrazovať všetky príspevky.", 
+      "This is a blog page where all posts will be displayed.", 
       args[:user_id], 
       "true",
       "true",
       "true"
     )
 
-    # Vytvorenie stránky O mne
+    # Create About me page
     Rake::Task["pages:create"].reenable
     Rake::Task["pages:create"].invoke(
-      "O mne", 
-      "Toto je stránka, kde môžete napísať niečo o sebe.", 
+      "About me", 
+      "This is a page where you can write something about yourself.", 
       args[:user_id], 
       "true",
       "false",
       "true"
     )
 
-    # Vytvorenie stránky Kontakt
+    # Create Contact page
     Rake::Task["pages:create"].reenable
     Rake::Task["pages:create"].invoke(
-      "Kontakt", 
-      "Tu môžete uviesť svoje kontaktné údaje.", 
+      "Contact", 
+      "Here you can provide your contact information.", 
       args[:user_id], 
       "true",
       "false",
@@ -160,40 +164,40 @@ namespace :pages do
 end
 
 namespace :settings do
-  desc "Vytvorí alebo aktualizuje nastavenia blogu"
+  desc "Create or update blog settings"
   task :create, [:blog_name, :registration_enabled] => :environment do |_, args|
     unless args[:blog_name]
-      puts "CHYBA: Názov blogu je povinný parameter."
-      puts "Použitie: rake \"settings:create[názov_blogu,registrácia_povolená]\""
-      puts "Príklad: rake \"settings:create[Môj osobný blog,true]\""
+      puts "ERROR: Blog name is a required parameter."
+      puts "Usage: rake \"settings:create[blog_name,registration_enabled]\""
+      puts "Example: rake \"settings:create[My personal blog,true]\""
       exit 1
     end
 
-    # Konverzia stringových hodnôt na boolean
+    # Convert string values to boolean
     registration_enabled = args[:registration_enabled] == "true"
     
-    # Pokúsime sa nájsť existujúce nastavenia
+    # Try to find existing settings
     setting = Setting.first || Setting.new
     
-    # Aktualizácia nastavení
+    # Update settings
     setting.blog_name = args[:blog_name]
     setting.registration_enabled = registration_enabled
     
     if setting.save
-      puts "Nastavenia boli úspešne vytvorené/aktualizované:"
+      puts "Settings were successfully created/updated:"
       puts "ID: #{setting.id}"
-      puts "Názov blogu: #{setting.blog_name}"
-      puts "Registrácia povolená: #{setting.registration_enabled}"
+      puts "Blog name: #{setting.blog_name}"
+      puts "Registration enabled: #{setting.registration_enabled}"
     else
-      puts "CHYBA pri vytváraní/aktualizácii nastavení:"
+      puts "ERROR creating/updating settings:"
       setting.errors.full_messages.each do |message|
         puts "- #{message}"
       end
     end
   end
 
-  desc "Vytvorí základné nastavenia blogu"
+  desc "Create default blog settings"
   task :create_default => :environment do
-    Rake::Task["settings:create"].invoke("Môj osobný blog", "false")
+    Rake::Task["settings:create"].invoke("My personal blog", "false")
   end
 end 
